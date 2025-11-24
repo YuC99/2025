@@ -1,31 +1,31 @@
-TASK:
-  COMPARE THE LEVEL AND VOLATILITY OF INFLATION (MONTHLY DATA) IN 7 EUROPEAN UNION COUNTRIES FOR 2023
-Steps:
-  1.	Define our task and briefly explain what inflation and volatility mean, and describe the data basis for our analysis.
-2.	Load and clean the necessary data from Eurostat in RStudio (using RMarkdown).
-3.	Begin the analysis.
+#TASK:
+#  COMPARE THE LEVEL AND VOLATILITY OF INFLATION (MONTHLY DATA) IN 7 EUROPEAN UNION COUNTRIES FOR 2023
+#Steps:
+#  1.	Define our task and briefly explain what inflation and volatility mean, and describe the data basis for our analysis.
+#2.	Load and clean the necessary data from Eurostat in RStudio (using RMarkdown).
+#3.	Begin the analysis.
 
-3.1 Exploratory Data Analysis (EDA) and Descriptive Statistics
-Task: Gain a general understanding of the distribution of inflation across different countries.
+#3.1 Exploratory Data Analysis (EDA) and Descriptive Statistics
+#Task: Gain a general understanding of the distribution of inflation across different countries.
 
-3.2 Visualization:
-  Task: Make the data visually clear.
-•	Line chart for trends
-•	Boxplot for distribution and outliers
-•	Heatmap
+#3.2 Visualization:
+#  Task: Make the data visually clear.
+#•	Line chart for trends
+#•	Boxplot for distribution and outliers
+#•	Heatmap
 
-3.3 Statistical Inference:
-  Task: Draw conclusions about the population based on our sample data (data for 2023).
-•	Confidence intervals for the mean inflation rate by country
-•	Hypothesis testing: Comparing the means of two countries
+#3.3 Statistical Inference:
+#  Task: Draw conclusions about the population based on our sample data (data for 2023).
+#•	Confidence intervals for the mean inflation rate by country
+#•	Hypothesis testing: Comparing the means of two countries
 
-3.4 Conclusion and Interpretation:
-  •	Final conclusion for the project work
+#3.4 Conclusion and Interpretation:
+#  •	Final conclusion for the project work
 
-Key Findings:
-  •	Which country had the highest/lowest average inflation?
-  •	In which country was inflation the most stable/unstable?
-  •	What was the overall trend in 2023? (Decrease/Increase/Stagnation).
+#Key Findings:
+#  •	Which country had the highest/lowest average inflation?
+#  •	In which country was inflation the most stable/unstable?
+#  •	What was the overall trend in 2023? (Decrease/Increase/Stagnation).
 
 
 library(ggplot2)
