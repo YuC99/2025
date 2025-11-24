@@ -15,18 +15,31 @@
 #•	Heatmap
 
 #3.3 Statistical Inference:
+
+ # Task: Draw conclusions about the population based on our sample data (data for 2023).
+
 #  Task: Draw conclusions about the population based on our sample data (data for 2023).
+
 #•	Confidence intervals for the mean inflation rate by country
 #•	Hypothesis testing: Comparing the means of two countries
 
 #3.4 Conclusion and Interpretation:
 #  •	Final conclusion for the project work
 
+
+
 #Key Findings:
 #  •	Which country had the highest/lowest average inflation?
 #  •	In which country was inflation the most stable/unstable?
 #  •	What was the overall trend in 2023? (Decrease/Increase/Stagnation).
 
+
+#Key Findings:
+#  •	Which country had the highest/lowest average inflation?
+#  •	In which country was inflation the most stable/unstable?
+#  •	What was the overall trend in 2023? (Decrease/Increase/Stagnation).
+# Yu Chai 3.2 and 3.3
+# Aleksandra Tambaeva 3.1 and 3.4
 
 library(ggplot2)
 library(eurostat)
