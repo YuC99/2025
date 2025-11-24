@@ -21,6 +21,51 @@ data2 <- data1 %>%
            lubridate::year(TIME_PERIOD) == year &
            coicop %in% qwe) 
 
+mean(as.numeric(data2$values[data2$geo=="PL"]))
+mean(as.numeric(data2$values[data2$geo=="CZ"]))
+mean(as.numeric(data2$values[data2$geo=="DE"]))
+mean(as.numeric(data2$values[data2$geo=="FR"]))
+mean(as.numeric(data2$values[data2$geo=="IT"]))
+mean(as.numeric(data2$values[data2$geo=="ES"]))
+mean(as.numeric(data2$values[data2$geo=="NL"]))
+##In our example mean shows us how much prices in different countries increased for the year.
+##This means that on average, each month in 2023, inflation in Poland remained at a high double-digit level (11.08%).
+##In Czech it was 12.14%, in Germany 6.11%, in France 5.68%, in Italy 6.01%, in Spain 3.43%, in Netherlands 4.21%.
+sd(as.numeric(data2$values[data2$geo=="PL"]))
+sd(as.numeric(data2$values[data2$geo=="CZ"]))
+sd(as.numeric(data2$values[data2$geo=="DE"]))
+sd(as.numeric(data2$values[data2$geo=="FR"]))
+sd(as.numeric(data2$values[data2$geo=="IT"]))
+sd(as.numeric(data2$values[data2$geo=="ES"]))
+sd(as.numeric(data2$values[data2$geo=="NL"]))
+## Standard deviation combined with mean shows us volatility of the inflation. In PL and CZ difference between mean and sd is high
+#that characterizes 2023 year like a year with periods of extreme prices growth that was replaced with periods of disinflation.
+#In other countries situation was more or less stable.
+median(as.numeric(data2$values[data2$geo=="PL"]))
+median(as.numeric(data2$values[data2$geo=="CZ"]))
+median(as.numeric(data2$values[data2$geo=="DE"]))
+median(as.numeric(data2$values[data2$geo=="FR"]))
+median(as.numeric(data2$values[data2$geo=="IT"]))
+median(as.numeric(data2$values[data2$geo=="ES"]))
+median(as.numeric(data2$values[data2$geo=="NL"]))
+## median means "typical" level of inflation in countries. In all cases in our examples difference between mean and median is not high
+#that means that there are no outlayers (extremely high or low levels of inf.)
+max(as.numeric(data2$values[data2$geo=="PL"]))
+min(as.numeric(data2$values[data2$geo=="PL"]))
+max(as.numeric(data2$values[data2$geo=="CZ"]))
+min(as.numeric(data2$values[data2$geo=="CZ"]))
+max(as.numeric(data2$values[data2$geo=="DE"]))
+min(as.numeric(data2$values[data2$geo=="DE"]))
+max(as.numeric(data2$values[data2$geo=="FR"]))
+min(as.numeric(data2$values[data2$geo=="FR"]))
+max(as.numeric(data2$values[data2$geo=="IT"]))
+min(as.numeric(data2$values[data2$geo=="IT"]))
+max(as.numeric(data2$values[data2$geo=="ES"]))
+min(as.numeric(data2$values[data2$geo=="ES"]))
+max(as.numeric(data2$values[data2$geo=="NL"]))
+min(as.numeric(data2$values[data2$geo=="NL"]))
+##the difference between max(top level) and min shows range of inflation fluctuations for the year.
+#but in NL inf rate is -1% - there were a month with prices decreases
 des <- data2 %>%
   group_by(geo) %>%
   summarise(
@@ -43,6 +88,19 @@ summary(des)
 #Lower SD means inflation is stable.Higher SD means inflation is more unstable or volatile.
 #CV ranges from 0.20 to 0.78.The higher the CV, the more relative volatility compared to its average inflation.
 #A CV of 0.20 = very stable inflation.A CV of 0.78 = highly unstable inflation.
+trend_analysis <- data2 %>%
+  group_by(geo) %>%
+  arrange(TIME_PERIOD) %>%
+  summarise(
+    start_inflation = first(values),
+    end_inflation = last(values),
+    trend = case_when(
+      end_inflation < start_inflation - 1 ~ "decreasing",
+      end_inflation > start_inflation + 1 ~ "increasing", 
+      TRUE ~ "stagnation"
+    ),
+    change = end_inflation - start_inflation
+  )
 
 wide <- data2 %>%
   select(TIME_PERIOD,geo,values) %>%
