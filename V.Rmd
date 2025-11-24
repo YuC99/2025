@@ -171,7 +171,7 @@ trend_analysis <- data2 %>%
     ),
     change = end_inflation - start_inflation
   )
-
+trend_analysis
 wide <- data2 %>%
   select(TIME_PERIOD,geo,values) %>%
   pivot_wider(names_from = geo, values_from = values)
@@ -190,7 +190,7 @@ ggplot(data2, aes(x = TIME_PERIOD, y = values, color = geo, group = geo)) +
   labs(
     title = "Monthly inflation in 7 EU countries, 2023",
     x = "Month",
-    y = "Inflation rate (y-o-y, %)",
+    y = "Inflation rate (m-o-m, %)",
     color = "Country"
   ) +
   theme_minimal()
@@ -213,7 +213,7 @@ ggplot(data2, aes(x = geo, y = values)) +
   labs(
     title = "Distribution of monthly inflation in 2023",
     x = "Country",
-    y = "Inflation rate (y-o-y, %)"
+    y = "Inflation rate (m-o-m, %)"
   ) +
   theme_minimal()
 ```
