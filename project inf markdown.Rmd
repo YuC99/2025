@@ -23,9 +23,6 @@ summary(cars)
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
@@ -62,7 +59,7 @@ Key Findings:
  Aleksandra Tambaeva 3.1 and 3.4
  
 1. Upload the data
-```{r pressure, echo=TRUE}
+```{r, echo=TRUE}
 library(ggplot2)
 library(eurostat)
 library(lubridate)
@@ -71,6 +68,7 @@ library(tidyr)
 qwe <- c("CP00")
 country <- c("PL", "CZ", "DE", "FR", "IT", "ES", "NL")
 year <- "2023"
+data1 <- get_eurostat("prc_hicp_manr", time_format = "date", cache = TRUE)
 data2 <- data1 %>%
   filter(geo %in% country &
            lubridate::year(TIME_PERIOD) == year &
@@ -80,7 +78,7 @@ data2 <- data1 %>%
 We have got data from Eurostat and opened them using different packages (ggplot2, eurostat,lubridate,dplyr,tidyr).
 
 **3.1 Exploratory Data Analysis (EDA) and Descriptive Statistics**
-```{r pressure, echo=TRUE}
+```{r, echo=TRUE}
 mean(as.numeric(data2$values[data2$geo=="PL"]))
 mean(as.numeric(data2$values[data2$geo=="CZ"]))
 mean(as.numeric(data2$values[data2$geo=="DE"]))
@@ -94,7 +92,7 @@ In our example mean shows us how much prices in different countries increased fo
 This means that on average, each month in 2023, inflation in Poland remained at a high double-digit level (11.08%).
 In Czech it was 12.14%, in Germany 6.11%, in France 5.68%, in Italy 6.01%, in Spain 3.43%, in Netherlands 4.21%.
 
-```{r pressure, echo=TRUE}
+```{r, echo=TRUE}
 sd(as.numeric(data2$values[data2$geo=="PL"]))
 sd(as.numeric(data2$values[data2$geo=="CZ"]))
 sd(as.numeric(data2$values[data2$geo=="DE"]))
@@ -106,7 +104,7 @@ sd(as.numeric(data2$values[data2$geo=="NL"]))
 Standard deviation combined with mean shows us volatility of the inflation. In PL and CZ difference between mean and sd is high that characterizes 2023 year like a year with periods of extreme prices growth that was replaced with periods of disinflation.
 In other countries situation was more or less stable.
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 median(as.numeric(data2$values[data2$geo=="PL"]))
 median(as.numeric(data2$values[data2$geo=="CZ"]))
 median(as.numeric(data2$values[data2$geo=="DE"]))
@@ -117,7 +115,7 @@ median(as.numeric(data2$values[data2$geo=="NL"]))
 ```
 Median means "typical" level of inflation in countries. In all cases in our examples difference between mean and median is not high that means that there are no outlayers (extremely high or low levels of inf.)
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 max(as.numeric(data2$values[data2$geo=="PL"]))
 min(as.numeric(data2$values[data2$geo=="PL"]))
 max(as.numeric(data2$values[data2$geo=="CZ"]))
@@ -135,7 +133,7 @@ min(as.numeric(data2$values[data2$geo=="NL"]))
 ```
 The difference between max(top level) and min shows range of inflation fluctuations for the year. But in NL inf rate is -1% - there were a month with prices decreases.
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 des <- data2 %>%
   group_by(geo) %>%
   summarise(
@@ -173,7 +171,7 @@ cor
 ```
 Inflation in Central and Western Europe (Germany, Italy, France, Czech Republic, Poland, Netherlands) moves together, showing strong similarity. Spain is the outlier, with a very different inflation pattern and much lower inflation levels.
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 ggplot(data2, aes(x = TIME_PERIOD, y = values, color = geo, group = geo)) +
   geom_line(size = 1) +
   geom_point() +
@@ -199,7 +197,7 @@ It is consistently the lowest inflation country among the group.
 NL shows both high inflation early in the year and negative inflation later.
 Its inflation drops below 0% around September–October.
 
-```{r pressure, ecgo = TRUE}
+```{r, ecgo = TRUE}
 ggplot(data2, aes(x = geo, y = values)) +
   geom_boxplot() +
   labs(
@@ -231,7 +229,7 @@ Spain has the lowest inflation levels overall.
 Very small box inflation is stable and low.
 Only one small outlier.
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 cor2 <- as.data.frame(cor) %>%
   mutate(country1 = rownames(cor)) %>%
   pivot_longer(
@@ -255,7 +253,7 @@ ggplot(cor2, aes(x = country1, y = country2, fill = corr)) +
 ```
 This heatmap shows how similar the inflation movements were between the seven EU countries in 2023. Darker blue means a strong positive correlation (the countries’ inflation moved in the same direction). Lighter areas mean a weaker relationship.
 
-```{r pressure, echo=TRUE}
+```{r, echo=TRUE}
 ci <- data2 %>%
   group_by(geo) %>%
   summarise(
@@ -286,7 +284,7 @@ The interval is relatively wide because NL had large monthly fluctuations, inclu
 Spain (ES)Mean: 3.43% (lowest)95% CI: 2.59% to 4.28%
 Spain has both the lowest inflation and one of the narrowest CIs, showing very stable and low inflation.
 
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 two_ctr <- c("PL", "DE")
 data_two <- data2 %>%
   filter(geo %in% two_ctr)
@@ -303,7 +301,7 @@ Germany had a significantly lower average inflation rate than Poland in 2023 (p 
 
 
 **3.4 Conclusion and Interpretation**
-```{r pressure, echo = TRUE}
+```{r, echo = TRUE}
 trend_analysis <- data2 %>%
   group_by(geo) %>%
   arrange(TIME_PERIOD) %>%
