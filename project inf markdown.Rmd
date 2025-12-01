@@ -1,0 +1,341 @@
+---
+title: "PROJECT V"
+author: "V"
+date: "2025-11-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+TASK:
+  COMPARE THE LEVEL AND VOLATILITY OF INFLATION (MONTHLY DATA) IN 7 EUROPEAN UNION COUNTRIES FOR 2023
+Steps:
+  1.	Define our task and briefly explain what inflation and volatility mean, and describe the data basis for our analysis.
+2.	Load and clean the necessary data from Eurostat in RStudio (using RMarkdown).
+3.	Begin the analysis.
+
+3.1 Exploratory Data Analysis (EDA) and Descriptive Statistics
+Task: Gain a general understanding of the distribution of inflation across different countries.
+
+3.2 Visualization:
+  Task: Make the data visually clear.
+•	Line chart for trends
+•	Boxplot for distribution and outliers
+•	Heatmap
+
+3.3 Statistical Inference:
+  Task: Draw conclusions about the population based on our sample data (data for 2023).
+•	Confidence intervals for the mean inflation rate by country
+•	Hypothesis testing: Comparing the means of two countries
+
+3.4 Conclusion and Interpretation:
+  •	Final conclusion for the project work
+
+Key Findings:
+  •	Which country had the highest/lowest average inflation?
+  •	In which country was inflation the most stable/unstable?
+  •	What was the overall trend in 2023? (Decrease/Increase/Stagnation).
+ Yu Chai 3.2 and 3.3
+ Aleksandra Tambaeva 3.1 and 3.4
+ 
+1. Upload the data
+```{r pressure, echo=TRUE}
+library(ggplot2)
+library(eurostat)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+qwe <- c("CP00")
+country <- c("PL", "CZ", "DE", "FR", "IT", "ES", "NL")
+year <- "2023"
+data2 <- data1 %>%
+  filter(geo %in% country &
+           lubridate::year(TIME_PERIOD) == year &
+           coicop %in% qwe) 
+```
+
+We have got data from Eurostat and opened them using different packages (ggplot2, eurostat,lubridate,dplyr,tidyr).
+
+**3.1 Exploratory Data Analysis (EDA) and Descriptive Statistics**
+```{r pressure, echo=TRUE}
+mean(as.numeric(data2$values[data2$geo=="PL"]))
+mean(as.numeric(data2$values[data2$geo=="CZ"]))
+mean(as.numeric(data2$values[data2$geo=="DE"]))
+mean(as.numeric(data2$values[data2$geo=="FR"]))
+mean(as.numeric(data2$values[data2$geo=="IT"]))
+mean(as.numeric(data2$values[data2$geo=="ES"]))
+mean(as.numeric(data2$values[data2$geo=="NL"]))
+```
+
+In our example mean shows us how much prices in different countries increased for the year.
+This means that on average, each month in 2023, inflation in Poland remained at a high double-digit level (11.08%).
+In Czech it was 12.14%, in Germany 6.11%, in France 5.68%, in Italy 6.01%, in Spain 3.43%, in Netherlands 4.21%.
+
+```{r pressure, echo=TRUE}
+sd(as.numeric(data2$values[data2$geo=="PL"]))
+sd(as.numeric(data2$values[data2$geo=="CZ"]))
+sd(as.numeric(data2$values[data2$geo=="DE"]))
+sd(as.numeric(data2$values[data2$geo=="FR"]))
+sd(as.numeric(data2$values[data2$geo=="IT"]))
+sd(as.numeric(data2$values[data2$geo=="ES"]))
+sd(as.numeric(data2$values[data2$geo=="NL"]))
+```
+Standard deviation combined with mean shows us volatility of the inflation. In PL and CZ difference between mean and sd is high that characterizes 2023 year like a year with periods of extreme prices growth that was replaced with periods of disinflation.
+In other countries situation was more or less stable.
+
+```{r pressure, echo = TRUE}
+median(as.numeric(data2$values[data2$geo=="PL"]))
+median(as.numeric(data2$values[data2$geo=="CZ"]))
+median(as.numeric(data2$values[data2$geo=="DE"]))
+median(as.numeric(data2$values[data2$geo=="FR"]))
+median(as.numeric(data2$values[data2$geo=="IT"]))
+median(as.numeric(data2$values[data2$geo=="ES"]))
+median(as.numeric(data2$values[data2$geo=="NL"]))
+```
+Median means "typical" level of inflation in countries. In all cases in our examples difference between mean and median is not high that means that there are no outlayers (extremely high or low levels of inf.)
+
+```{r pressure, echo = TRUE}
+max(as.numeric(data2$values[data2$geo=="PL"]))
+min(as.numeric(data2$values[data2$geo=="PL"]))
+max(as.numeric(data2$values[data2$geo=="CZ"]))
+min(as.numeric(data2$values[data2$geo=="CZ"]))
+max(as.numeric(data2$values[data2$geo=="DE"]))
+min(as.numeric(data2$values[data2$geo=="DE"]))
+max(as.numeric(data2$values[data2$geo=="FR"]))
+min(as.numeric(data2$values[data2$geo=="FR"]))
+max(as.numeric(data2$values[data2$geo=="IT"]))
+min(as.numeric(data2$values[data2$geo=="IT"]))
+max(as.numeric(data2$values[data2$geo=="ES"]))
+min(as.numeric(data2$values[data2$geo=="ES"]))
+max(as.numeric(data2$values[data2$geo=="NL"]))
+min(as.numeric(data2$values[data2$geo=="NL"]))
+```
+The difference between max(top level) and min shows range of inflation fluctuations for the year. But in NL inf rate is -1% - there were a month with prices decreases.
+
+```{r pressure, echo = TRUE}
+des <- data2 %>%
+  group_by(geo) %>%
+  summarise(
+    n = n(),
+    mean = mean(values, na.rm = TRUE),
+    median = median(values, na.rm = TRUE),
+    min = min(values, na.rm = TRUE),
+    max = max(values, na.rm = TRUE),
+    sd = sd(values, na.rm = TRUE),
+    cv = sd/mean
+  )
+summary(des)
+```
+The mean inflation across countries ranges from 3.43% to 12.14%.
+So, inflation levels were very different among the 7 countries.
+Median values go from 3.3% to 10.7%.Median and mean are similar, which suggests no extreme skew in the data.
+It confirms the difference in inflation levels between countries.
+The minimum monthly inflation ranges from –1.0% to 7.6%.A value of –1% means one country had a month of slightly negative inflation (deflation).
+The maximum inflation goes up to 19.1%, which is very high.
+Standard deviation ranges from 1.15 to 4.04.
+Lower SD means inflation is stable.Higher SD means inflation is more unstable or volatile.
+CV ranges from 0.20 to 0.78.The higher the CV, the more relative volatility compared to its average inflation.
+A CV of 0.20 = very stable inflation.A CV of 0.78 = highly unstable inflation.
+
+**3.2 Visualization**
+```{r pewssure, echo = TRUE}
+wide <- data2 %>%
+  select(TIME_PERIOD,geo,values) %>%
+  pivot_wider(names_from = geo, values_from = values)
+wide
+cor <- wide %>%
+  select(-TIME_PERIOD) %>%
+  cor(use = "pairwise.complete.obs")
+cor
+```
+Inflation in Central and Western Europe (Germany, Italy, France, Czech Republic, Poland, Netherlands) moves together, showing strong similarity. Spain is the outlier, with a very different inflation pattern and much lower inflation levels.
+
+```{r pressure, echo = TRUE}
+ggplot(data2, aes(x = TIME_PERIOD, y = values, color = geo, group = geo)) +
+  geom_line(size = 1) +
+  geom_point() +
+  labs(
+    title = "Monthly inflation in 7 EU countries, 2023",
+    x = "Month",
+    y = "Inflation rate (m-o-m, %)",
+    color = "Country"
+  ) +
+  theme_minimal()
+```
+
+CZ begins the year at almost 20%.
+PL also starts very high, around 17%.
+Both countries show a clear downward trend during the year.
+Italy starts above 10%,
+but inflation falls sharply to around 0–2% at the end of the year.
+Germany (DE) and France (FR) are stable
+Both countries stay in the range of 4–8%.
+Their inflation lines are smooth and show a moderate, steady decline.
+Spain remains around 1–6% throughout the year.
+It is consistently the lowest inflation country among the group.
+NL shows both high inflation early in the year and negative inflation later.
+Its inflation drops below 0% around September–October.
+
+```{r pressure, ecgo = TRUE}
+ggplot(data2, aes(x = geo, y = values)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of monthly inflation in 2023",
+    x = "Country",
+    y = "Inflation rate (m-o-m, %)"
+  ) +
+  theme_minimal()
+```
+CZ has one of the highest inflation levels (high median).
+The box is tall large variation across months.
+Upper whisker reaches close to 20%.
+Poland also has a high median inflation similar to CZ.
+Wide range from about 7% to 15%.
+Indicates high and unstable inflation.
+Italy (IT)median is in the middle range.
+Whiskers are long inflation changed a lot.
+Italy has strong volatility.
+Germany’s median inflation is moderate.
+The box is narrower more stable inflation than CZ/PL/IT.
+Less spread between months.
+France has a similar pattern to Germany.
+Moderate inflation and limited variation.
+One of the more stable countries.
+Netherlands (NL)very wide box and whiskers high volatility.
+Inflation ranges from negative values to higher mid-year values.
+Shows the most unstable pattern among all countries.
+Spain has the lowest inflation levels overall.
+Very small box inflation is stable and low.
+Only one small outlier.
+
+```{r pressure, echo = TRUE}
+cor2 <- as.data.frame(cor) %>%
+  mutate(country1 = rownames(cor)) %>%
+  pivot_longer(
+    cols = -country1,
+    names_to = "country2",
+    values_to = "corr"
+  )
+ggplot(cor2, aes(x = country1, y = country2, fill = corr)) +
+  geom_tile() +
+  scale_fill_gradient2(
+    limits = c(-1, 1),
+    midpoint = 0
+  ) +
+  labs(
+    title = "Correlation of monthly inflation between countries (2023)",
+    x = "Country",
+    y = "Country",
+    fill = "Correlation"
+  ) +
+  theme_minimal()
+```
+This heatmap shows how similar the inflation movements were between the seven EU countries in 2023. Darker blue means a strong positive correlation (the countries’ inflation moved in the same direction). Lighter areas mean a weaker relationship.
+
+```{r pressure, echo=TRUE}
+ci <- data2 %>%
+  group_by(geo) %>%
+  summarise(
+    n    = n(),
+    mean = mean(values, na.rm = TRUE),
+    sd   = sd(values, na.rm = TRUE)
+  ) %>%
+  mutate(
+    se        = sd / sqrt(n),
+    t_crit    = qt(0.975, df = n - 1),      
+    ci_lower  = mean - t_crit * se,
+    ci_upper  = mean + t_crit * se
+  )
+ci
+```
+Czech Republic (CZ)Mean inflation: 12.1%95% CI: 9.57% to 14.7%
+CZ has the highest average inflation and a wide interval, meaning inflation was high and quite variable.
+Poland (PL)Mean: 11.0%95% CI: 8.49% to 13.5%
+Poland also shows very high inflation with large variability.
+Italy (IT)Mean: 6.02%95% CI: 3.83% to 8.20%
+The interval is wide, showing high volatility, even though the average level is moderate.
+Germany (DE)Mean: 6.11%95% CI: 4.64% to 7.57%
+Germany’s CI is narrower, meaning inflation was more stable.
+France (FR)Mean: 5.68% 95% CI: 4.95% to 6.41%
+France has one of the smallest intervals, indicating very stable inflation.
+Netherlands (NL)Mean: 4.22%95% CI: 2.11% to 6.33%
+The interval is relatively wide because NL had large monthly fluctuations, including negative inflation.
+Spain (ES)Mean: 3.43% (lowest)95% CI: 2.59% to 4.28%
+Spain has both the lowest inflation and one of the narrowest CIs, showing very stable and low inflation.
+
+```{r pressure, echo = TRUE}
+two_ctr <- c("PL", "DE")
+data_two <- data2 %>%
+  filter(geo %in% two_ctr)
+t_test <- t.test(
+  values ~ geo,
+  data = data_two,
+  var.equal = FALSE   
+)
+t_test
+```
+
+Germany had a significantly lower average inflation rate than Poland in 2023 (p = 0.001651).
+
+
+
+**3.4 Conclusion and Interpretation**
+```{r pressure, echo = TRUE}
+trend_analysis <- data2 %>%
+  group_by(geo) %>%
+  arrange(TIME_PERIOD) %>%
+  summarise(
+    start_inflation = first(values),
+    end_inflation = last(values),
+    trend = case_when(
+      end_inflation < start_inflation - 1 ~ "decreasing",
+      end_inflation > start_inflation + 1 ~ "increasing", 
+      TRUE ~ "stagnation"
+    ),
+    change = end_inflation - start_inflation
+  )
+trend_analysis
+```
+
+In this trend analysis we can see that in all represented countries inflation rate was decreasing - this is the main trend in 2023 year. 
+
+```{r}
+stability_analysis <- data2 %>%
+  group_by(geo) %>%
+  arrange(values) %>%
+  summarise(
+    mean_inflation = mean(values),
+    sd_inflation = sd(values),
+    cv_inflation = sd_inflation / mean_inflation * 100
+    ) %>%
+  arrange(sd_inflation)
+most_stable <- stability_analysis %>% head(1)
+most_unstable <- stability_analysis %>% tail(1)
+print(stability_analysis)
+print(paste("The most stable:", most_stable$geo))
+print(paste("The most unstable:", most_unstable$geo))
+
+```
